@@ -43,7 +43,7 @@ def main():
 	# sd = rt.SoftDrop(0, 0.1, 1.0)
 
 	all_jets = []
-	for iEvent in tqdm(range(100), 'event'):
+	for iEvent in tqdm(range(1000), 'event'):
 		if not pythia.next():
 			continue
 		parts = pyfj.vectorize(pythia, True, -1, 1, True)
