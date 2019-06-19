@@ -47,6 +47,7 @@ fi
 if [ ! -d ${fjdirinst} ]; then
 	if [ -d ${fjdirsrc} ]; then
 		cd ${fjdirsrc}
+		echo "current dir: $PWD"
 	    echo "unsetting PYTHONPATH"
 	    unset PYTHONPATH
 	    python_includes=$(python3-config --includes)
@@ -66,8 +67,8 @@ if [ ! -d ${fjdirinst} ]; then
 		    PYTHON=${python_exec} \
 		    PYTHON_INCLUDE="${python_includes}" \
 		    --enable-cgal --with-cgaldir=${CGAL_DIR} \
-		    --enable-pyext \
-		    LDFLAGS=-Wl,-rpath,${BOOST_DIR}/lib CXXFLAGS=-I${BOOST_DIR}/include CPPFLAGS=-I${BOOST_DIR}/include
+		    --enable-pyext
+		    # \ LDFLAGS=-Wl,-rpath,${BOOST_DIR}/lib CXXFLAGS=-I${BOOST_DIR}/include CPPFLAGS=-I${BOOST_DIR}/include
 		fi
 		make -j $(n_cores) && make install
 		cd -
