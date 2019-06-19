@@ -13,13 +13,14 @@ from pythiafjtools import pypythiafjtools as pyfj
 # In[2]:
 
 
+get_ipython().run_line_magic('matplotlib', 'widget')
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set()
-from tqdm import tqdm
+from tqdm import tnrange, tqdm_notebook
 
 
-# In[5]:
+# In[3]:
 
 
 def create_and_init_pythia(config_strings=[]):
@@ -33,14 +34,14 @@ def create_and_init_pythia(config_strings=[]):
     return None
 
 
-# In[6]:
+# In[4]:
 
 
 sconfig_pythia = [ "Beams:eCM = 8000.", "HardQCD:all = on", "PhaseSpace:pTHatMin = 20."]
 pythia = create_and_init_pythia(sconfig_pythia)
 
 
-# In[7]:
+# In[5]:
 
 
 # set up our jet definition and a jet selector
@@ -50,7 +51,7 @@ selector = fj.SelectorPtMin(20.0) & fj.SelectorPtMax(40.0) & fj.SelectorAbsEtaMa
 sd = rt.SoftDrop(0, 0.1, 1.0)
 
 
-# In[8]:
+# In[6]:
 
 
 # set up our jet definition and a jet selector
@@ -60,18 +61,18 @@ jet_selector = fj.SelectorPtMin(20.0) & fj.SelectorPtMax(40.0) & fj.SelectorAbsE
 sd = rt.SoftDrop(0, 0.1, 1.0)
 
 
-# In[9]:
+# In[7]:
 
 
 all_jets = []
-for iEvent in tqdm(range(100), 'event'):
+for iEvent in tqdm_notebook(range(100), 'event'):
     if not pythia.next(): continue
-    parts = pyfj.vectorize(pythia, True, -1, 1)
+    parts = pyfj.vectorize(pythia, True, -1, 1, False)
     jets = jet_selector(jet_def(parts))
     all_jets.extend(jets)
 
 
-# In[10]:
+# In[8]:
 
 
 def deltas(jets, jets0):
@@ -79,13 +80,13 @@ def deltas(jets, jets0):
         yield jets0[i].perp() - jets[i].perp()
 
 
-# In[11]:
+# In[9]:
 
 
 get_ipython().run_cell_magic('time', '', 'all_sd_jets = [sd.result(j) for j in all_jets]\n\netas = [j.eta() for j in all_jets]\npts = [j.pt() for j in all_jets]\nsd_pts = [j.pt() for j in all_sd_jets]\nsd_delta_pt = [delta for delta in deltas(all_jets, all_sd_jets)]\n\nangs0 = [pyfj.angularity(j, 0.) for j in all_jets]\nsd_angs0 = [pyfj.angularity(j, 0.) for j in all_sd_jets]\nangs0_R0 = [pyfj.angularity(j, 0., jet_R0) for j in all_jets]\nsd_angs0_R0 = [pyfj.angularity(j, 0., jet_R0) for j in all_sd_jets]\n\nangs1 = [pyfj.angularity(j, 1.) for j in all_jets]\nsd_angs1 = [pyfj.angularity(j, 1.) for j in all_sd_jets]\nangs1_R0 = [pyfj.angularity(j, 1., jet_R0) for j in all_jets]\nsd_angs1_R0 = [pyfj.angularity(j, 1., jet_R0) for j in all_sd_jets]\n\nangs15 = [pyfj.angularity(j, 1.5) for j in all_jets]\nsd_angs15 = [pyfj.angularity(j, 1.5) for j in all_sd_jets]\nangs15_R0 = [pyfj.angularity(j, 1.5, jet_R0) for j in all_jets]\nsd_angs15_R0 = [pyfj.angularity(j, 1.5, jet_R0) for j in all_sd_jets]')
 
 
-# In[12]:
+# In[10]:
 
 
 fig, axes = plt.subplots(nrows=1, ncols=2, sharex=False, sharey=False)
@@ -107,7 +108,7 @@ ax1.set_yscale('log')
 fig.tight_layout()
 
 
-# In[13]:
+# In[11]:
 
 
 fig1, axes1 = plt.subplots(nrows=3, ncols=2, sharex=False, sharey=False)
@@ -138,6 +139,12 @@ n, bins, patches = ax15.hist(angs15_R0, 25, density=1, facecolor='blue', alpha=0
 n, bins, patches = ax15.hist(sd_angs15_R0, 25, density=1, facecolor='red', alpha=0.3)
 
 fig1.tight_layout()
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:

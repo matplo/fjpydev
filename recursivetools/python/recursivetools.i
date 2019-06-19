@@ -3,10 +3,14 @@
 %include "std_string.i"
 %include "std_vector.i"
 // %include "fastjet.i"
+// %import "fastjet.i"
 
 // Add necessary symbols to generated header
 %{
 #include <fastjet/FunctionOfPseudoJet.hh>
+#include <fastjet/tools/Transformer.hh>
+#include <fastjet/ClusterSequence.hh>
+#include <fastjet/WrappedStructure.hh>
 #include <fastjet/tools/Transformer.hh>
 
 #include <RecursiveTools/Recluster.hh>
@@ -79,7 +83,7 @@ namespace fastjet{
                                         const fastjet::PseudoJet &j2) const;
     };
 
-    class RecursiveSymmetryCutBase::StructureType : public WrappedStructure {
+    class RecursiveSymmetryCutBase::StructureType : public fastjet::WrappedStructure {
     public:
       StructureType(const fastjet::PseudoJet & j);
       StructureType(const fastjet::PseudoJet & j, double delta_R_in, double symmetry_in, double mu_in=-1.0);
@@ -176,11 +180,17 @@ namespace fastjet{
       IteratedSoftDropInfo(std::vector<std::pair<double,double> > zg_thetag_in);
       const std::vector<std::pair<double,double> > &all_zg_thetag();
       const std::vector<std::pair<double,double> > & operator()();
-      const std::pair<double,double> & operator[](unsigned int i);
+      // const std::pair<double,double> & operator[](unsigned int i);
       double angularity(double alpha, double kappa=1.0) const;
       unsigned int multiplicity() const;
       unsigned int size() const;
     };
+
+    %extend IteratedSoftDropInfo {
+    const std::pair<double,double> __getitem__(unsigned int i) {
+        return (*($self))[i];
+    }
+}
 
     class IteratedSoftDrop : public fastjet::FunctionOfPseudoJet<IteratedSoftDropInfo> {
     public:
@@ -212,7 +222,66 @@ namespace fastjet{
     };
 
     // %include "RecursiveTools/BottomUpSoftDrop.hh"
+    class BottomUpSoftDropStructure : public fastjet::WrappedStructure{
+    public:
+      BottomUpSoftDropStructure(const fastjet::PseudoJet & result_jet);
+      virtual std::string description();
+      std::vector<fastjet::PseudoJet> rejected();
+      std::vector<fastjet::PseudoJet> extra_jets() const;
+      double beta() const;
+      double symmetry_cut() const;
+      double R0();
+    };
+
+    class BottomUpSoftDrop : public fastjet::Transformer {
+    public:
+      BottomUpSoftDrop(double beta, double symmetry_cut, double R0 = 1.0);
+      BottomUpSoftDrop(const fastjet::JetAlgorithm jet_alg, double beta, double symmetry_cut,
+           double R0 = 1.0);
+      BottomUpSoftDrop(const fastjet::JetDefinition &jet_def, double beta, double symmetry_cut,
+           double R0 = 1.0);
+      virtual fastjet::PseudoJet result(const fastjet::PseudoJet &jet) const;
+      virtual std::vector<fastjet::PseudoJet> global_grooming(const std::vector<fastjet::PseudoJet> & event) const;
+      virtual std::string description() const;
+      typedef BottomUpSoftDropStructure StructureType;
+    };
+
+    class BottomUpSoftDropRecombiner : public fastjet::JetDefinition::Recombiner {
+    public:
+      BottomUpSoftDropRecombiner(double beta, double symmetry_cut, double R0,
+                                 const fastjet::JetDefinition::Recombiner *recombiner);
+      virtual void recombine(const fastjet::PseudoJet &pa,
+           const fastjet::PseudoJet &pb,
+           fastjet::PseudoJet &pab) const;
+      virtual std::string description();
+      const std::vector<unsigned int> & rejected() const{ return _rejected;}
+      void clear_rejected();
+    };
+
+    class BottomUpSoftDropPlugin : public fastjet::JetDefinition::Plugin {
+    public:
+      BottomUpSoftDropPlugin(const fastjet::JetDefinition &jet_def, double beta, double symmetry_cut,
+                             double R0 = 1.0);
+      virtual void run_clustering(fastjet::ClusterSequence &input_cs) const;
+      virtual std::string description() const;
+      virtual double R() const;
+    };
+
     // %include "RecursiveTools/ModifiedMassDropTagger.hh"
+    class ModifiedMassDropTagger : public RecursiveSymmetryCutBase {
+    public:
+      ModifiedMassDropTagger(double symmetry_cut,
+                             const fastjet::FunctionOfPseudoJet<fastjet::PseudoJet> * subtractor = 0
+                             );
+      ModifiedMassDropTagger(double           symmetry_cut,
+                             fastjet::contrib::RecursiveSymmetryCutBase::SymmetryMeasure  symmetry_measure,
+                             double           mu_cut = std::numeric_limits<double>::infinity(),
+                             fastjet::contrib::RecursiveSymmetryCutBase::RecursionChoice  recursion_choice = larger_pt,
+                             const fastjet::FunctionOfPseudoJet<fastjet::PseudoJet> * subtractor = 0
+                             );
+      virtual ~ModifiedMassDropTagger();
+      double symmetry_cut() const;
+    };
 
   } // namespace contrib
 } // namespace fastjet
