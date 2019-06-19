@@ -18,17 +18,17 @@ def create_and_init_pythia(config_strings=[]):
 
 
 def print_jets(jets):
-	print("{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s}".format(
-		"jet #", "pt", "rap", "phi", "N particles"))
 	for ijet in range(len(jets)):
 		jet = jets[ijet]
 		constituents = jet.constituents()
+		print("{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s}".format(
+			"jet #", "pt", "rap", "phi", "N particles"))
 		print("{0:5d} {1:10.3f} {2:10.4f} {3:10.4f} {4:5d}".format(
 			ijet, jet.pt(), jet.rap(), jet.phi(), len(constituents)))
-		for c in constituents:
-			pypart = pyfj.getPythia8Particle(c)
-			if pypart:
-				print("      - {} {} {}".format(pypart.perp(), pypart.name(), pypart.id()))
+		for c in fj.sorted_by_pt(constituents):
+			_p = pyfj.getPythia8Particle(c)
+			if _p:
+				print(" - {0:>10s} id={1:5d} status={2:5d} pT={3:10.3f}".format(_p.name(), _p.id(), _p.status(), _p.pT()))
 
 
 def main():

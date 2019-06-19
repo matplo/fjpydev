@@ -59,10 +59,10 @@ namespace pythiafjtools{
 
 	Pythia8::Particle* PythiaParticleInfo::getParticle() const {return fParticle;}
 
-	Pythia8::Particle *getPythia8Particle(const fastjet::PseudoJet &psj)
+	Pythia8::Particle *getPythia8Particle(const fastjet::PseudoJet *psj)
 	{
-		if (psj.has_user_info<PythiaParticleInfo>())
-			return psj.user_info<PythiaParticleInfo>().getParticle();
+		if (psj->has_user_info<PythiaParticleInfo>())
+			return psj->user_info<PythiaParticleInfo>().getParticle();
 		return 0;
 	}
 }

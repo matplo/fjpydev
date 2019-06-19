@@ -12,7 +12,7 @@ namespace pythiafjtools{
 
 	double angularity(const fastjet::PseudoJet &j, double alpha, double scaleR0 = 1.);
 
-	Pythia8::Particle *getPythia8Particle(const fastjet::PseudoJet &psj);
+	Pythia8::Particle *getPythia8Particle(const fastjet::PseudoJet *psj);
 
 	class PythiaParticleInfo : public fastjet::PseudoJet::UserInfoBase
 	{
