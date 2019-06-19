@@ -23,12 +23,16 @@ import os
 spath = os.path.dirname(os.path.abspath(__file__))
 
 import sys
-sys.path.append(os.path.abspath("{}/build/python/CMakeSwig/fastjet/".format(spath)))
-sys.path.append(os.path.abspath("{}/build/python/CMakeSwig/recursivetools/".format(spath)))
-sys.path.append(os.path.abspath("{}/build/python/CMakeSwig/RecursiveTools/".format(spath)))
+sys.path.append(os.path.abspath("{0}/build/python/fjpy".format(spath)))
+sys.path.append(os.path.abspath("{0}/pythia8235inst/lib".format(spath)))
+python_version = '{0}.{1}'.format(sys.version_info[0], sys.version_info[1])
+sys.path.append(os.path.abspath("{0}/fastjet-3.3.2-inst/lib/python{1}/site-packages".format(spath, python_version)))
 
-import pyfastjet as fj
-import pyrecursivetools as rt
+import fastjet as fj
+import pythia8
+from recursivetools import pyrecursivetools as rt
+from pythiafjtools import pypythiafjtools as pyfj
+
 import gzip
 
 def main():

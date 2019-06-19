@@ -1,1 +1,2 @@
-rm -rf install build pythia8235*
+rm -rf install build
+# pythia8235*

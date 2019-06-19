@@ -22,6 +22,8 @@ if [ ! -d ${pydirinst} ]; then
 	    mkdir -p ${python_bin_dir}
 	    ln -s ${python_exec} ${python_bin_dir}/python
 	    echo "python bin dir: ${python_bin_dir}"
+	    echo "unsetting PYTHONPATH"
+	    unset PYTHONPATH
 		./configure --prefix=${pydirinst} \
 			--with-python-include=${python_inc_dir} \
 			--with-python-bin=${python_bin_dir}
@@ -33,6 +35,7 @@ fi
 if [ -d ${pydirinst} ]; then
 	export PYTHIA_DIR=${pydirinst}
 	export PATH=$PATH:${pydirinst}/bin
+	export PYTHONPATH=${PYTHONPATH}:${pydirinst}/lib
 fi
 
 # ./configure --prefix=/Users/ploskon/software/hepsoft/pythia8/8235 \
