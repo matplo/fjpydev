@@ -1,17 +1,53 @@
 #!/bin/bash
 
+function os_linux()
+{
+	_system=$(uname -a | cut -f 1 -d " ")
+	if [ $_system == "Linux" ]; then
+		echo "yes"
+	else
+		echo
+	fi
+}
+
+function os_darwin()
+{
+	_system=$(uname -a | cut -f 1 -d " ")
+	if [ $_system == "Darwin" ]; then
+		echo "yes"
+	else
+		echo
+	fi
+}
+
+function n_cores()
+{
+	local _ncores="1"
+	[ $(os_darwin) ] && local _ncores=$(system_profiler SPHardwareDataType | grep "Number of Cores" | cut -f 2 -d ":" | sed 's| ||')
+	[ $(os_linux) ] && local _ncores=$(lscpu | grep "CPU(s):" | head -n 1 | cut -f 2 -d ":" | sed 's| ||g')
+	#[ ${_ncores} -gt "1" ] && retval=$(_ncores-1)
+	echo ${_ncores}
+}
+
 version=8235
 pydirsrc=pythia${version}
-pydirinst=$PWD/pythia${version}inst
+pydirinst=$PWD/fjpydev/pythia${version}
+if [ ! -z ${1} ]; then
+	pydirinst=${1}
+fi
 
-if [ ! -d ${pydirsrc} ]; then
+if [ ! -e ${pydirsrc}.tgz ]; then
 	wget http://home.thep.lu.se/~torbjorn/pythia8/${pydirsrc}.tgz
+fi
+if [ ! -d ${pydirsrc} ]; then
 	tar zxvf ${pydirsrc}.tgz
 fi
 
 if [ ! -d ${pydirinst} ]; then
 	if [ -d ${pydirsrc} ]; then
 		cd ${pydirsrc}
+	    echo "unsetting PYTHONPATH"
+	    unset PYTHONPATH
 	    python_inc_dir=$(python3-config --includes | cut -d' ' -f 1 | cut -dI -f 2)
 	    python_exec=$(which python3)
 	    python_bin_dir=$(dirname ${python_exec})
@@ -22,12 +58,10 @@ if [ ! -d ${pydirinst} ]; then
 	    mkdir -p ${python_bin_dir}
 	    ln -s ${python_exec} ${python_bin_dir}/python
 	    echo "python bin dir: ${python_bin_dir}"
-	    echo "unsetting PYTHONPATH"
-	    unset PYTHONPATH
 		./configure --prefix=${pydirinst} \
 			--with-python-include=${python_inc_dir} \
 			--with-python-bin=${python_bin_dir}
-		make -j && make install
+		make -j $(n_cores) && make install
 		cd -
 	fi
 fi
@@ -37,12 +71,3 @@ if [ -d ${pydirinst} ]; then
 	export PATH=$PATH:${pydirinst}/bin
 	export PYTHONPATH=${PYTHONPATH}:${pydirinst}/lib
 fi
-
-# ./configure --prefix=/Users/ploskon/software/hepsoft/pythia8/8235 \
-# 	--with-root=/Users/ploskon/software/hepsoft/root/v6-16-00 \
-# 	--with-root-lib=/Users/ploskon/software/hepsoft/root/v6-16-00/lib \
-# 	--with-root-include=/Users/ploskon/software/hepsoft/root/v6-16-00/include \
-# 	--with-hepmc2=/Users/ploskon/software/hepsoft/hepmc/2.06.09 \
-# 	--with-lhapdf5=/Users/ploskon/software/hepsoft/lhapdf/5.9.1 \
-# 	--with-python-include=/Users/ploskon/anaconda2/include/python2.7 \
-# 	--with-python-bin=/Users/ploskon/anaconda2/bin

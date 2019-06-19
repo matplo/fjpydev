@@ -1,17 +1,54 @@
 #!/bin/bash
 
+
+function os_linux()
+{
+	_system=$(uname -a | cut -f 1 -d " ")
+	if [ $_system == "Linux" ]; then
+		echo "yes"
+	else
+		echo
+	fi
+}
+
+function os_darwin()
+{
+	_system=$(uname -a | cut -f 1 -d " ")
+	if [ $_system == "Darwin" ]; then
+		echo "yes"
+	else
+		echo
+	fi
+}
+
+function n_cores()
+{
+	local _ncores="1"
+	[ $(os_darwin) ] && local _ncores=$(system_profiler SPHardwareDataType | grep "Number of Cores" | cut -f 2 -d ":" | sed 's| ||')
+	[ $(os_linux) ] && local _ncores=$(lscpu | grep "CPU(s):" | head -n 1 | cut -f 2 -d ":" | sed 's| ||g')
+	#[ ${_ncores} -gt "1" ] && retval=$(_ncores-1)
+	echo ${_ncores}
+}
+
 version=3.3.2
 fjdirsrc=fastjet-${version}
-fjdirinst=$PWD/fastjet-${version}-inst
+fjdirinst=$PWD/fjpydev/fastjet-${version}
+if [ ! -z ${1} ]; then
+	fjdirinst=${1}
+fi
 
-if [ ! -d ${fjdirsrc} ]; then
+if [ ! -e ${fjdirsrc}.tar.gz ]; then
 	wget http://fastjet.fr/repo/${fjdirsrc}.tar.gz
-	tar zxvf ${fjdirsrc}.tgz
+fi
+if [ ! -d ${fjdirsrc} ]; then
+	tar zxvf ${fjdirsrc}.tar.gz
 fi
 
 if [ ! -d ${fjdirinst} ]; then
 	if [ -d ${fjdirsrc} ]; then
 		cd ${fjdirsrc}
+	    echo "unsetting PYTHONPATH"
+	    unset PYTHONPATH
 	    python_includes=$(python3-config --includes)
 	    python_inc_dir=$(python3-config --includes | cut -d' ' -f 1 | cut -dI -f 2)
 	    python_exec=$(which python3)
@@ -19,8 +56,6 @@ if [ ! -d ${fjdirinst} ]; then
 	    echo "python exec: ${python_exec}"
 	    echo "python includes: ${python_includes}"
 	    echo "python include: ${python_inc_dir}"
-	    echo "unsetting PYTHONPATH"
-	    unset PYTHONPATH
 		if [ "x${CGAL_DIR}" == "x" ]; then
 		    ./configure --prefix=${fjdirinst} --enable-allcxxplugins \
 		    PYTHON=${python_exec} \
