@@ -6,7 +6,7 @@
 - still needs work but main idea of having things in python is working (FastJet contribs with CMake + python (SWIG) bindings)
 - tested with [FastJet ver. 3.3.2](http://www.fastjet.fr/)
 - and parts of code from [FastJet Contrib ver. 1.041](https://fastjet.hepforge.org/contrib/) - work on the python bindings ongoing (RecursiveTools and LundPlane for the moment)
-- patches RecursiveSymmetryCutBase.hh
+- patches RecursiveTools/RecursiveSymmetryCutBase.hh, LundPlane/SecondaryLund.hh, LundPlane/LundGenerator.hh
 
 ## Building
 
