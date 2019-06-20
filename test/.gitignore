@@ -1,2 +1,8 @@
 /build
 /install
+.ipynb_checkpoints/
+fastjet-3.3.2.tar.gz
+fastjet-3.3.2/
+fjpydev/
+pythia8235.tgz
+pythia8235/
