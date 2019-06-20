@@ -29,9 +29,22 @@ function n_cores()
 	echo ${_ncores}
 }
 
+function thisdir()
+{
+	SOURCE="${BASH_SOURCE[0]}"
+	while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+	  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+	  SOURCE="$(readlink "$SOURCE")"
+	  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+	done
+	DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+	echo ${DIR}
+}
+SCRIPTPATH=$(thisdir)
+
 version=8235
 pydirsrc=pythia${version}
-pydirinst=$PWD/fjpydev/pythia${version}
+pydirinst=${SCRIPTPATH}/fjpydev/pythia${version}
 if [ ! -z ${1} ]; then
 	pydirinst=${1}
 fi

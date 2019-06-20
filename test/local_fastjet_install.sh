@@ -30,9 +30,22 @@ function n_cores()
 	echo ${_ncores}
 }
 
+function thisdir()
+{
+	SOURCE="${BASH_SOURCE[0]}"
+	while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+	  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+	  SOURCE="$(readlink "$SOURCE")"
+	  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+	done
+	DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+	echo ${DIR}
+}
+SCRIPTPATH=$(thisdir)
+
 version=3.3.2
 fjdirsrc=fastjet-${version}
-fjdirinst=$PWD/fjpydev/fastjet-${version}
+fjdirinst=${SCRIPTPATH}/fjpydev/fastjet-${version}
 if [ ! -z ${1} ]; then
 	fjdirinst=${1}
 fi
