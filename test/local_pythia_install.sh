@@ -43,17 +43,21 @@ function thisdir()
 SCRIPTPATH=$(thisdir)
 
 version=8235
-pydirsrc=pythia${version}
+pyfname=pythia${version}
+pydirsrc=${SCRIPTPATH}/pythia${version}
 pydirinst=${SCRIPTPATH}/fjpydev/pythia${version}
+
 if [ ! -z ${1} ]; then
 	pydirinst=${1}
 fi
 
-if [ ! -e ${pydirsrc}.tgz ]; then
-	wget http://home.thep.lu.se/~torbjorn/pythia8/${pydirsrc}.tgz
+if [ ! -e ${SCRIPTPATH}/${pyfname}.tgz ]; then
+	cd ${SCRIPTPATH}
+	wget http://home.thep.lu.se/~torbjorn/pythia8/${pyfname}.tgz
 fi
+
 if [ ! -d ${pydirsrc} ]; then
-	tar zxvf ${pydirsrc}.tgz
+	tar zxvf ${pyfname}.tgz
 fi
 
 if [ ! -d ${pydirinst} ]; then

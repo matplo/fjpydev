@@ -44,15 +44,19 @@ function thisdir()
 SCRIPTPATH=$(thisdir)
 
 version=3.3.2
-fjdirsrc=fastjet-${version}
+fjfname=fastjet-${version}
+fjdirsrc=${SCRIPTPATH}/fastjet-${version}
 fjdirinst=${SCRIPTPATH}/fjpydev/fastjet-${version}
+
 if [ ! -z ${1} ]; then
 	fjdirinst=${1}
 fi
 
-if [ ! -e ${fjdirsrc}.tar.gz ]; then
-	wget http://fastjet.fr/repo/${fjdirsrc}.tar.gz
+if [ ! -e ${SCRIPTPATH}/${fjfname}.tar.gz ]; then
+	cd ${SCRIPTPATH}
+	wget http://fastjet.fr/repo/${fjfname}.tar.gz
 fi
+
 if [ ! -d ${fjdirsrc} ]; then
 	tar zxvf ${fjdirsrc}.tar.gz
 fi

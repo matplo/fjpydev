@@ -17,7 +17,7 @@ SCRIPTPATH=$(thisdir)
 unset PYTHONPATH
 . ${SCRIPTPATH}/local_pythia_install.sh
 . ${SCRIPTPATH}/local_fastjet_install.sh
-recursivetools="${SCRIPTPATH}/build/python/CMakeSwig/recursivetools"
-pyfastjet="${SCRIPTPATH}/build/python/CMakeSwig/fastjet"
+# recursivetools="${SCRIPTPATH}/build/python/CMakeSwig/recursivetools"
+# pyfastjet="${SCRIPTPATH}/build/python/CMakeSwig/fastjet"
 # export PYTHONPATH=${PYTHONPATH}:${recursivetools}:${pyfastjet}
-export PYTHONPATH=${PYTHONPATH}:$PWD/build/python/fjpy
+export PYTHONPATH=${PYTHONPATH}:${SCRIPTPATH}/build/python/fjpy
