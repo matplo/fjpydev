@@ -4,7 +4,7 @@ target_sources(pythiafjtools
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/PythiaFJTools/pyfjtools.hh>
 
-    $<INSTALL_INTERFACE:include/RecursiveTools/pyfjtools.hh>
+    $<INSTALL_INTERFACE:include/PythiaFJTools/pyfjtools.hh>
   PRIVATE
     src/pyfjtools.cc
 )
