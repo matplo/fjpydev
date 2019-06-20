@@ -5,7 +5,7 @@
 - this is put together using the excellent https://github.com/Mizux/cmake-swig (a complete example of how to create a Modern [CMake](https://cmake.org/) C++ Project with the [SWIG](http://www.swig.org) code generator - wrappers for Python, .Net and Java.) - note, some doc left on purpose
 - still needs work but main idea of having things in python is working (FastJet contribs with CMake + python (SWIG) bindings)
 - tested with [FastJet ver. 3.3.2](http://www.fastjet.fr/)
-- and parts of code from [FastJet Contrib ver. 1.041](https://fastjet.hepforge.org/contrib/) - work on the python bindings ongoing (RecursiveTools for the moment)
+- and parts of code from [FastJet Contrib ver. 1.041](https://fastjet.hepforge.org/contrib/) - work on the python bindings ongoing (RecursiveTools and LundPlane for the moment)
 - patches RecursiveSymmetryCutBase.hh
 
 ## Building
