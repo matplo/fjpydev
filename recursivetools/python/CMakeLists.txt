@@ -1,5 +1,3 @@
-execute_process ( COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/get_fj_contrib.sh ${CMAKE_CURRENT_SOURCE_DIR} WORKING_DIRECTORY /tmp )
-
 set_property(SOURCE recursivetools.i PROPERTY CPLUSPLUS ON)
 set_property(SOURCE recursivetools.i PROPERTY SWIG_MODULE_NAME pyrecursivetools)
 swig_add_library(pyrecursivetools
@@ -35,5 +33,6 @@ endif()
 target_link_libraries(pyrecursivetools
 	PRIVATE
 	recursivetools
+	${FASTJET_LIBS}
 	${PYTHON_LIBRARIES}
 	)

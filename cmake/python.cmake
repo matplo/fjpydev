@@ -27,6 +27,7 @@ message(STATUS "Found Python Include: ${PYTHON_INCLUDE_DIRS} (found version \"${
 
 # add_subdirectory(fastjet/python)
 add_subdirectory(recursivetools/python)
+add_subdirectory(lundplane/python)
 add_subdirectory(pythiafjtools/python)
 
 # Find if python module MODULE_NAME is available, if not install it to the Python user install
@@ -56,6 +57,7 @@ endfunction()
 configure_file(cmake/__init__.py.in python/${PROJECT_NAME}/__init__.py COPYONLY)
 # configure_file(cmake/__init__.py.in python/${PROJECT_NAME}/fastjet/__init__.py COPYONLY)
 configure_file(cmake/__init__.py.in python/${PROJECT_NAME}/recursivetools/__init__.py COPYONLY)
+configure_file(cmake/__init__.py.in python/${PROJECT_NAME}/lundplane/__init__.py COPYONLY)
 configure_file(cmake/__init__.py.in python/${PROJECT_NAME}/pythiafjtools/__init__.py COPYONLY)
 
 # To use a cmake generator expression (aka $<>), it must be processed at build time
@@ -88,6 +90,7 @@ add_custom_command(OUTPUT setup.py dist ${PROJECT_NAME}.egg-info
 	COMMAND ${CMAKE_COMMAND} -E echo "  '${PROJECT_NAME}':[$<$<NOT:$<PLATFORM_ID:Windows>>:'.libs/*'>]," >> setup.py
 #	COMMAND ${CMAKE_COMMAND} -E echo "  '${PROJECT_NAME}.fastjet':['$<TARGET_FILE_NAME:pyfastjet>']," >> setup.py
 	COMMAND ${CMAKE_COMMAND} -E echo "  '${PROJECT_NAME}.recursivetools':['$<TARGET_FILE_NAME:pyrecursivetools>']," >> setup.py
+	COMMAND ${CMAKE_COMMAND} -E echo "  '${PROJECT_NAME}.lundplane':['$<TARGET_FILE_NAME:pylundplane>']," >> setup.py
 	COMMAND ${CMAKE_COMMAND} -E echo "  '${PROJECT_NAME}.pythiafjtools':['$<TARGET_FILE_NAME:pypythiafjtools>']," >> setup.py
 	COMMAND ${CMAKE_COMMAND} -E echo "  }," >> setup.py
 	COMMAND ${CMAKE_COMMAND} -E echo "  include_package_data=True," >> setup.py
@@ -119,6 +122,8 @@ add_custom_target(bdist ALL
 #	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:fastjet> ${PROJECT_NAME}/.libs
 	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pyrecursivetools> ${PROJECT_NAME}/recursivetools
 	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:recursivetools> ${PROJECT_NAME}/.libs
+	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pylundplane> ${PROJECT_NAME}/lundplane
+	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:lundplane> ${PROJECT_NAME}/.libs
 	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pypythiafjtools> ${PROJECT_NAME}/pythiafjtools
 	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pythiafjtools> ${PROJECT_NAME}/.libs
 	#COMMAND ${PYTHON_EXECUTABLE} setup.py bdist bdist_wheel
