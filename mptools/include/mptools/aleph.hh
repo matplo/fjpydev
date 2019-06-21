@@ -16,21 +16,26 @@ namespace Aleph
 		Particle(const Particle &p);
 		Particle(double px, double py, double pz, double m, double q, int pwflag, double d0, double z0, int ntpc, int nitc, int nvdet);
 
-		double 	get_px() 	{return fpx;}
-		double 	get_py() 	{return fpy;}
-		double 	get_pz() 	{return fpz;}
-		double 	get_m() 	{return fm;}
-		double 	get_q() 	{return fq;}
-		int 	get_pwflag(){return fpwflag;}
-		double 	get_d0() 	{return fd0;}
-		double 	get_z0() 	{return fz0;}
-		int 	get_ntpc() 	{return fntpc;}
-		int 	get_nitc() 	{return fnitc;}
-		int 	get_nvdet() {return fnvdet;}
+		double 	px() 	 const {return fpx;}
+		double 	py() 	 const {return fpy;}
+		double 	pz() 	 const {return fpz;}
+		double 	m() 	 const {return fm;}
+		double 	q() 	 const {return fq;}
+		int 	pwflag() const {return fpwflag;}
+		double 	d0() 	 const {return fd0;}
+		double 	z0() 	 const {return fz0;}
+		int 	ntpc() 	 const {return fntpc;}
+		int 	nitc() 	 const {return fnitc;}
+		int 	nvdet()  const {return fnvdet;}
+		double  e()      const {return fe;}
+		double  E()      const {return fe;}
+		double  pt()     const {return fpt;}
 
 		~Particle() {;}
 
 		void dump() const;
+		double calc_e() const;
+		double calc_pt() const;
 
 	private:
 		double 	fpx;
@@ -44,6 +49,9 @@ namespace Aleph
 		int 	fntpc;
 		int 	fnitc;
 		int 	fnvdet;
+
+		double  fe;
+		double  fpt;
 	};
 
 	class EventHeader
@@ -55,14 +63,14 @@ namespace Aleph
 
 		void reset(int run, int n, double e, int vflag, double vx, double vy, double ex, double ey);
 
-		int 	get_run() 	const {return frun;}
-		int 	get_n() 	const {return fn;}
-		double 	get_e() 	const {return fe;}
-		int 	get_vflag() const {return fvflag;}
-		double  get_vx() 	const {return fvx;}
-		double  get_vy() 	const {return fvy;}
-		double  get_ex() 	const {return fex;}
-		double  get_ey() 	const {return fey;}
+		int 	run() 	const {return frun;}
+		int 	n() 	const {return fn;}
+		double 	e() 	const {return fe;}
+		int 	vflag() const {return fvflag;}
+		double  vx() 	const {return fvx;}
+		double  vy() 	const {return fvy;}
+		double  ex() 	const {return fex;}
+		double  ey() 	const {return fey;}
 
 		void clear();
 		void dump() const;

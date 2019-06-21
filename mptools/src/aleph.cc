@@ -32,31 +32,45 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 
 namespace Aleph
 {
 	Particle::Particle()
-			: fpx(0), fpy(0), fpz(0), fm(0), fq(0), fpwflag(0), fd0(0), fz0(0), fntpc(0), fnitc(0), fnvdet(0)
+			: fpx(0), fpy(0), fpz(0), fm(0), fq(0), fpwflag(0), fd0(0), fz0(0), fntpc(0), fnitc(0), fnvdet(0), fe(calc_e()), fpt(calc_pt())
 	{
 		;
 	}
 
 	Particle::Particle(const Particle &p)
-			: fpx(p.fpx), fpy(p.fpy), fpz(p.fpz), fm(p.fm), fq(p.fq), fpwflag(p.fpwflag), fd0(p.fd0), fz0(p.fz0), fntpc(p.fntpc), fnitc(p.fnitc), fnvdet(p.fnvdet)
+			: fpx(p.fpx), fpy(p.fpy), fpz(p.fpz), fm(p.fm), fq(p.fq), fpwflag(p.fpwflag), fd0(p.fd0), fz0(p.fz0), fntpc(p.fntpc), fnitc(p.fnitc), fnvdet(p.fnvdet), fe(calc_e()), fpt(calc_pt())
 	{
 		;
 	}
 
 
 	Particle::Particle(double px, double py, double pz, double m, double q, int pwflag, double d0, double z0, int ntpc, int nitc, int nvdet)
-			: fpx(px), fpy(py), fpz(pz), fm(m), fq(q), fpwflag(pwflag), fd0(d0), fz0(z0), fntpc(ntpc), fnitc(nitc), fnvdet(nvdet)
+			: fpx(px), fpy(py), fpz(pz), fm(m), fq(q), fpwflag(pwflag), fd0(d0), fz0(z0), fntpc(ntpc), fnitc(nitc), fnvdet(nvdet), fe(calc_e()), fpt(calc_pt())
 	{
 		;
 	}
 
 	void Particle::dump() const
 	{
-		std::cout << std::setw(7) << fpx << " " << std::setw(7) << fpy << " " << std::setw(7) << fpz << " " << std::setw(7) << fm << " " << std::setw(7) << fq << " " << std::setw(7) << fpwflag << " " << std::setw(7) << fd0 << " " << std::setw(7) << fz0 << " " << std::setw(7) << fntpc << " " << std::setw(7) << fnitc << " " << std::setw(7) << fnvdet << std::endl;
+		std::cout << std::showpoint << std::setprecision(2)
+			<< std::setw(7) << fpt << " " << std::setw(7) << fe << " " << std::setw(7) << fpx << " " << std::setw(7) << fpy << " " << std::setw(7) << fpz << " " << std::setw(7) << fm << " " << std::setw(7) << fq << " " << std::setw(7) << fpwflag << " " << std::setw(7) << fd0 << " " << std::setw(7) << fz0 << " " << std::setw(7) << fntpc << " " << std::setw(7) << fnitc << " " << std::setw(7) << fnvdet << std::endl;
+	}
+
+	double Particle::calc_e() const
+	{
+		double _fe = std::sqrt(fpx*fpx + fpy*fpy + fpz*fpz + fm*fm);
+		return _fe;
+	}
+
+	double Particle::calc_pt() const
+	{
+		double _fpt = std::sqrt(fpx*fpx + fpy*fpy);
+		return _fpt;
 	}
 
 	// ----------
@@ -125,7 +139,7 @@ namespace Aleph
 		fHeader.dump();
 		if (noparts == false)
 		{
-			std::cout << std::setw(7) << "  px" << std::setw(7) << "  py" << std::setw(7) << "  pz" << std::setw(7) << "  mass " << std::setw(7) << "  charge" << std::setw(7) << "  pwflag" << std::setw(7) << "    d0" << std::setw(7) << "    z0" << std::setw(7) << "  ntpc" << std::setw(7) << "  nitc" << std::setw(7) << "  nvdet" << std::endl;
+			std::cout << std::setw(7) << "    pt" << std::setw(7) << "    e" << std::setw(7) <<  "  px" << std::setw(7) << "  py" << std::setw(7) << "  pz" << std::setw(7) << "  mass " << std::setw(7) << "  charge" << std::setw(7) << "  pwflag" << std::setw(7) << "    d0" << std::setw(7) << "    z0" << std::setw(7) << "  ntpc" << std::setw(7) << "  nitc" << std::setw(7) << "  nvdet" << std::endl;
 			for (unsigned int i = 0; i < fparticles.size(); i++)
 				fparticles[i].dump();
 			std::cout << "---" << std::endl;
