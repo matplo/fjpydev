@@ -59,21 +59,70 @@ namespace Aleph
 		std::cout << std::setw(7) << fpx << " " << std::setw(7) << fpy << " " << std::setw(7) << fpz << " " << std::setw(7) << fm << " " << std::setw(7) << fq << " " << std::setw(7) << fpwflag << " " << std::setw(7) << fd0 << " " << std::setw(7) << fz0 << " " << std::setw(7) << fntpc << " " << std::setw(7) << fnitc << " " << std::setw(7) << fnvdet << std::endl;
 	}
 
+	// ----------
+	EventHeader::EventHeader()
+		: frun(0), fn(0), fe(0), fvflag(0), fvx(0), fvy(0), fex(0), fey(0)
+	{
+		;
+	}
+
+	EventHeader::EventHeader(const EventHeader& h)
+		: frun(h.frun), fn(h.fn), fe(h.fe), fvflag(h.fvflag), fvx(h.fvx), fvy(h.fvy), fex(h.fex), fey(h.fey)
+	{
+		;
+	}
+
+	EventHeader::EventHeader(int run, int n, double e, int vflag, double vx, double vy, double ex, double ey)
+		: frun(run), fn(n), fe(e), fvflag(vflag), fvx(vx), fvy(vy), fex(ex), fey(ey)
+	{
+		;
+	}
+
+	void EventHeader::dump() const
+	{
+		std::cout << "EventHeader: " << std::setw(7) << frun << " " << std::setw(7) << fn << " " << std::setw(7) << fe << " " << std::setw(7) << fvflag << " " << std::setw(7) << fvx << " " << std::setw(7) << fvy << " " << std::setw(7) << fex << " " << std::setw(7) << fey << std::endl;
+	}
+
+
+	void EventHeader::clear()
+	{
+		reset(0, 0, 0, 0, 0, 0, 0, 0);
+	}
+
+	void EventHeader::reset(int run, int n, double e, int vflag, double vx, double vy, double ex, double ey)
+	{
+		frun   = run;
+		fn     = n;
+		fe     = e;
+		fvflag = vflag;
+		fvx    = vx;
+		fvy    = vy;
+		fex    = ex;
+		fey    = ey;
+	}
+	// ----------
+
 	Event::Event()
-		: frun(0), fn(0), fe(0), fvflag(0), fvx(0), fvy(0), fex(0), fey(0), fparticles()
+		: fHeader(), fparticles()
+	{
+		;
+	}
+
+	Event::Event(const Event &e)
+		: fHeader(e.fHeader), fparticles(e.fparticles)
 	{
 		;
 	}
 
 	Event::Event(int run, int n, double e, int vflag, double vx, double vy, double ex, double ey)
-		: frun(run), fn(n), fe(e), fvflag(vflag), fvx(vx), fvy(vy), fex(ex), fey(ey), fparticles()
+		: fHeader(run, n, e, vflag, vx, vy, ex, ey), fparticles()
 	{
 		;
 	}
 
 	void Event::dump(bool noparts) const
 	{
-		std::cout << "Event: " << std::setw(7) << frun << " " << std::setw(7) << fn << " " << std::setw(7) << fe << " " << std::setw(7) << fvflag << " " << std::setw(7) << fvx << " " << std::setw(7) << fvy << " " << std::setw(7) << fex << " " << std::setw(7) << fey << std::endl;
+		fHeader.dump();
 		if (noparts == false)
 		{
 			std::cout << std::setw(7) << "  px" << std::setw(7) << "  py" << std::setw(7) << "  pz" << std::setw(7) << "  mass " << std::setw(7) << "  charge" << std::setw(7) << "  pwflag" << std::setw(7) << "    d0" << std::setw(7) << "    z0" << std::setw(7) << "  ntpc" << std::setw(7) << "  nitc" << std::setw(7) << "  nvdet" << std::endl;
@@ -84,6 +133,7 @@ namespace Aleph
 	}
 
 	std::vector<Particle> Event::get_particles() const {return fparticles;}
+	EventHeader Event::get_header() const {return fHeader;}
 
 	void Event::add_particle(const Particle &p)
 	{
@@ -98,23 +148,17 @@ namespace Aleph
 
 	void Event::clear()
 	{
-		reset(0, 0, 0, 0, 0, 0, 0, 0);
+		fHeader.clear();
+		fparticles.clear();
 	}
 
 	void Event::reset(int run, int n, double e, int vflag, double vx, double vy, double ex, double ey)
 	{
-		frun   = run;
-		fn     = n;
-		fe     = e;
-		fvflag = vflag;
-		fvx    = vx;
-		fvy    = vy;
-		fex    = ex;
-		fey    = ey;
+		fHeader.reset(run, n, e, vflag, vx, vy, ex, ey);
 		fparticles.clear();
 	}
 
-	const Event& Reader::get_event() {return fEvent;}
+	// ----------
 
 	Reader::Reader()
 		: fName(), fStream(), fEvent()
@@ -133,6 +177,8 @@ namespace Aleph
 	{
 		fStream.open(fName);
 	}
+
+	const Event& Reader::get_event() {return fEvent;}
 
 	void Reader::reset()
 	{

@@ -46,30 +46,28 @@ namespace Aleph
 		int 	fnvdet;
 	};
 
-	class Event
+	class EventHeader
 	{
 	public:
-		Event();
-		Event(int run, int n, double e, int vflag, double vx, double vy, double ex, double ey);
+		EventHeader();
+		EventHeader(const EventHeader &h);
+		EventHeader(int run, int n, double e, int vflag, double vx, double vy, double ex, double ey);
+
 		void reset(int run, int n, double e, int vflag, double vx, double vy, double ex, double ey);
 
-		int 	get_run() 	{return frun;}
-		int 	get_n() 	{return fn;}
-		double 	get_e() 	{return fe;}
-		int 	get_vflag() {return fvflag;}
-		double  get_vx() 	{return fvx;}
-		double  get_vy() 	{return fvy;}
-		double  get_ex() 	{return fex;}
-		double  get_ey() 	{return fey;}
-
-		std::vector<Particle> get_particles() const;
-		void add_particle(const Particle &p);
-		void add_particle(double px, double py, double pz, double m, double q, int pwflag, double d0, double z0, int ntpc, int nitc, int nvdet);
+		int 	get_run() 	const {return frun;}
+		int 	get_n() 	const {return fn;}
+		double 	get_e() 	const {return fe;}
+		int 	get_vflag() const {return fvflag;}
+		double  get_vx() 	const {return fvx;}
+		double  get_vy() 	const {return fvy;}
+		double  get_ex() 	const {return fex;}
+		double  get_ey() 	const {return fey;}
 
 		void clear();
-		void dump(bool noparts = false) const;
+		void dump() const;
 
-		~Event() {;}
+		~EventHeader() {;}
 
 	private:
 		int 	frun;
@@ -80,7 +78,29 @@ namespace Aleph
 		double  fvy;
 		double  fex;
 		double  fey;
+	};
 
+	class Event
+	{
+	public:
+		Event();
+		Event(const Event &e);
+		Event(int run, int n, double e, int vflag, double vx, double vy, double ex, double ey);
+
+		EventHeader get_header() const;
+
+		std::vector<Particle> get_particles() const;
+		void add_particle(const Particle &p);
+		void add_particle(double px, double py, double pz, double m, double q, int pwflag, double d0, double z0, int ntpc, int nitc, int nvdet);
+
+		void reset(int run, int n, double e, int vflag, double vx, double vy, double ex, double ey);
+		void clear();
+		void dump(bool noparts = false) const;
+
+		~Event() {;}
+
+	private:
+		EventHeader fHeader;
 		std::vector<Particle> fparticles;
 	};
 
