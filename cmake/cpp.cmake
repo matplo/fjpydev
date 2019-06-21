@@ -6,6 +6,7 @@ endif()
 add_subdirectory(recursivetools)
 add_subdirectory(lundplane)
 add_subdirectory(pythiafjtools)
+add_subdirectory(mptools)
 
 # Install
 include(GNUInstallDirs)
