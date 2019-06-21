@@ -13,3 +13,9 @@
 // Process symbols in header
 
 %include "mptools/aleph.hh"
+
+namespace std
+{
+  %template(AlephParticleVector) std::vector<Aleph::Particle>;
+}
+
