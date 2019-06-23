@@ -1,0 +1,29 @@
+--- HepMC-2.06.09/CMakeLists.txt	2012-06-05 13:19:09.000000000 -0700
++++ HepMC-2.06.09-CMakeLists.txt-fix	2019-06-23 12:35:32.000000000 -0700
+@@ -65,7 +65,10 @@
+ 
+ # because we want to move these libraries about,
+ # do not embed full path in shared libraries or executables
+-set (CMAKE_SKIP_RPATH)
++# set (CMAKE_SKIP_RPATH)
++set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
++set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
++set(CMAKE_BUILD_WITH_INSTALL_NAME_DIR TRUE)
+ 
+ ENABLE_TESTING()
+ 
+@@ -95,3 +98,14 @@
+ # Packaging utility
+ include(HepMCUseCpack)
+ 
++set(CMAKE_MACOSX_RPATH 1)
++SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
++if(APPLE)
++  set_target_properties(HepMC PROPERTIES INSTALL_RPATH "@loader_path")
++  set_target_properties(HepMC PROPERTIES MACOSX_RPATH "@loader_path")
++  set_target_properties(HepMCfio PROPERTIES INSTALL_RPATH "@loader_path")
++  set_target_properties(HepMCfio PROPERTIES MACOSX_RPATH "@loader_path")
++elseif(UNIX)
++  set_target_properties(HepMC PROPERTIES INSTALL_RPATH "$ORIGIN")
++  set_target_properties(HepMCfio PROPERTIES INSTALL_RPATH "$ORIGIN")
++endif()

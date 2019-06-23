@@ -34,5 +34,7 @@ target_link_libraries(pypythiafjtools
 	PRIVATE
 	pythiafjtools
 	${PYTHIA8_LDFLAGS}
+    # ${HEPMC_LINK_LIBRARIES}
+    ${HEPMC_LIBRARIES}
 	${PYTHON_LIBRARIES}
 	)

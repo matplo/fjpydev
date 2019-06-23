@@ -34,3 +34,6 @@ unset PYTHONPATH
 cmake -S.. -Bbuild -DBUILD_PYTHON=ON -DCMAKE_INSTALL_PREFIX=$PWD/install -DCMAKE_BUILD_TYPE=Release \
 && cmake --build build --target all -- -j $(n_cores) \
 && cmake --build build --target install
+
+./fix_hepmc_links.sh /Volumes/mp256s/devel/fjpydev/test/build/python/fjpy/pythiafjtools
+./fix_hepmc_links.sh /Volumes/mp256s/devel/fjpydev/test/build/python/fjpy/.libs

@@ -38,9 +38,10 @@ endif()
 target_link_libraries(pythiafjtools
   PUBLIC
     # CMakeSwig::fastjet
-    ${HEPMC_LIBRARIES}
     ${FASTJET_LIBS}
     ${PYTHIA8_LDFLAGS}
+    # ${HEPMC_LINK_LIBRARIES}
+    ${HEPMC_LIBRARIES}
 )
 
 #target_link_libraries(pythiafjtools PUBLIC...)
