@@ -46,6 +46,12 @@ message( STATUS "PYTHIA8_CXXFLAGS: ${PYTHIA8_CXXFLAGS}")
 message( STATUS "PYTHIA8_LDFLAGS: ${PYTHIA8_LDFLAGS}")
 set(PYTHIA8_LDFLAGS "${PYTHIA8_LDFLAGS} -ldl")
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+find_package(HepMC REQUIRED HepMC HepMCfio)
+if (HEPMC_FOUND)
+        include_directories(${HEPMC_INCLUDE_DIRS})
+        add_definitions(-DUSE_HEPMC)
+endif()
 
 #include(util)
 set(CMAKE_VERBOSE_MAKEFILE ON)

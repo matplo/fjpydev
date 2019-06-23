@@ -41,76 +41,56 @@ function thisdir()
 	echo ${DIR}
 }
 SCRIPTPATH=$(thisdir)
+savepwd=${PWD}
 
-version=8235
-fname=pythia${version}
-dirsrc=${SCRIPTPATH}/pythia${version}
-dirinst=${SCRIPTPATH}/fjpydev/pythia${version}
+version=3.1.0
+fname=HepMC3-${version}
+dirsrc=${SCRIPTPATH}/HepMC3-${version}
+dirinst=${SCRIPTPATH}/fjpydev/hepmc-${version}
 
 if [ ! -z ${1} ]; then
 	dirinst=${1}
 fi
 
-if [ ! -e ${SCRIPTPATH}/${fname}.tgz ]; then
+if [ ! -e ${SCRIPTPATH}/${fname}.tar.gz ]; then
 	cd ${SCRIPTPATH}
-	wget http://home.thep.lu.se/~torbjorn/pythia8/${fname}.tgz
+	wget http://hepmc.web.cern.ch/hepmc/releases/${fname}.tar.gz
 fi
 
 if [ ! -d ${dirsrc} ]; then
-	tar zxvf ${fname}.tgz
+	tar zxvf ${fname}.tar.gz
 fi
 
-reconfigure=$([ "x${1}" == "xreconfigure" ] && echo "yes")
-# echo "? RECONFIGURE: ${reconfigure}"
-
-if [ ! -d ${dirinst} ] || [ ${reconfigure} ]; then
+if [ ! -d ${dirinst} ]; then
 	if [ -d ${dirsrc} ]; then
 		cd ${dirsrc}
-	    # echo "unsetting PYTHONPATH"
+	    echo "unsetting PYTHONPATH"
 	    unset PYTHONPATH
 	    python_inc_dir=$(python3-config --includes | cut -d' ' -f 1 | cut -dI -f 2)
 	    python_exec=$(which python3)
 	    python_bin_dir=$(dirname ${python_exec})
-	    # echo "python exec: ${python_exec}"
-	    # echo "python include: ${python_inc_dir}"
+	    echo "python exec: ${python_exec}"
+	    echo "python include: ${python_inc_dir}"
 	    # this is a nasty trick to force python3 bindings
 	    python_bin_dir="$PWD/tmppy"
 	    mkdir -p ${python_bin_dir}
-	    ln -sf ${python_exec} ${python_bin_dir}/python
-	    # echo "python bin dir: ${python_bin_dir}"
-	    if [ -z ${reconfigure} ]; then
-	    	if [ ! -d ${dirinst} ]; then
-				# echo "-- NO RECONFIGURE -- ${reconfigure}"
-				./configure --prefix=${dirinst} \
-					--with-python-include=${python_inc_dir} \
-					--with-python-bin=${python_bin_dir} \
-					--with-hepmc2=${HEPMC2_DIR} \
-					--with-hepmc2-include=${HEPMC2_DIR}/include \
-					--with-hepmc2-lib=${HEPMC2_DIR}/lib
-				make -j $(n_cores) && make install
-			fi
-		else
-			# echo "-- RECONFIGURE -- ${reconfigure}"
-			# echo "- do we already have hepmc2?"
-			# echo "$(pythia8-config --config | grep hepmc2)"
-			if [ -z "$(pythia8-config --config | grep hepmc2)" ]; then
-				# make clean
-				./configure --prefix=${dirinst} \
-					--with-python-include=${python_inc_dir} \
-					--with-python-bin=${python_bin_dir} \
-					--with-hepmc2=${HEPMC2_DIR} \
-					--with-hepmc2-include=${HEPMC2_DIR}/include \
-					--with-hepmc2-lib=${HEPMC2_DIR}/lib
-				make -j $(n_cores) && make install
-			fi
-		fi
-		cd - 2>&1 > /dev/null
+	    ln -s ${python_exec} ${python_bin_dir}/python
+	    echo "python bin dir: ${python_bin_dir}"
+		mkdir hepmc3-build
+		cd hepmc3-build
+		cmake -S${dirsrc} -DHEPMC3_ENABLE_ROOTIO=OFF -DCMAKE_INSTALL_PREFIX=${dirinst} \
+			-DHEPMC3_BUILD_EXAMPLES=ON -DHEPMC3_ENABLE_TEST=ON \
+			-DHEPMC3_INSTALL_INTERFACES=ON
+		make -j $(n_cores) && make install && make test
+		ln -s ${dirinst}/include/HepMC3 ${dirinst}/include/HepMC
+		[ -e ${dirinst}/lib/libHepMC3.dylib ] && ln -s ${dirinst}/lib/libHepMC3.dylib ${dirinst}/lib/libHepMC.dylib
+		[ -e ${dirinst}/lib/libHepMC3.so ] && ln -s ${dirinst}/lib/libHepMC3.so ${dirinst}/lib/libHepMC.so
+		cd ${savepwd}
 	fi
 fi
 
 if [ -d ${dirinst} ]; then
-	export PYTHIA_DIR=${dirinst}
-	export PYTHIA8_ROOT_DIR=${dirinst}
+	export HEPMC3_DIR=${dirinst}
 	export PATH=$PATH:${dirinst}/bin
 	export PYTHONPATH=${PYTHONPATH}:${dirinst}/lib
 fi
