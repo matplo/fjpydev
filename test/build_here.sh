@@ -36,4 +36,5 @@ cmake -S.. -Bbuild -DBUILD_PYTHON=ON -DCMAKE_INSTALL_PREFIX=$PWD/install -DCMAKE
 && cmake --build build --target install
 
 ./fix_hepmc_links.sh /Volumes/mp256s/devel/fjpydev/test/build/python/fjpy/pythiafjtools
+./fix_hepmc_links.sh /Volumes/mp256s/devel/fjpydev/test/build/python/fjpy/mptools
 ./fix_hepmc_links.sh /Volumes/mp256s/devel/fjpydev/test/build/python/fjpy/.libs

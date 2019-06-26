@@ -33,6 +33,7 @@ endif()
 target_link_libraries(pymptools
 	PRIVATE
 	mptools
-	# ${PYTHIA8_LDFLAGS}
+	${PYTHIA8_LDFLAGS}
 	${PYTHON_LIBRARIES}
+    ${HEPMC_LINK_LIBRARIES}
 	)

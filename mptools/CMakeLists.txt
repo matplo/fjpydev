@@ -4,16 +4,20 @@ target_sources(mptools
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/mptools/strutil.hh>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/mptools/aleph.hh>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/mptools/pythiahepmc.hh>
     $<INSTALL_INTERFACE:include/mptools/strutil.hh>
     $<INSTALL_INTERFACE:include/mptools/aleph.hh>
+    $<INSTALL_INTERFACE:include/mptools/pythiahepmc.hh>
   PRIVATE
     src/strutil.cc
     src/aleph.cc
+    src/pythiahepmc.cc
 )
 target_include_directories(mptools
   PUBLIC
     $<BUILD_INTERFACE:${PYTHIA8_DIR}/include>
     $<BUILD_INTERFACE:${FASTJET_DIR}/include>
+    $<BUILD_INTERFACE:${HEPMC_INCLUDE_DIRS}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
@@ -36,7 +40,8 @@ target_link_libraries(mptools
   PUBLIC
     # CMakeSwig::fastjet
     ${FASTJET_LIBS}
-    # ${PYTHIA8_LDFLAGS}
+    ${PYTHIA8_LDFLAGS}
+    ${HEPMC_LINK_LIBRARIES}
 )
 
 #target_link_libraries(mptools PUBLIC...)
