@@ -63,6 +63,28 @@ fi
 reconfigure=$([ "x${1}" == "xreconfigure" ] && echo "yes")
 # echo "? RECONFIGURE: ${reconfigure}"
 
+function run_configure()
+{
+	if [ -z ${LHAPDF_DIR} ]; then
+		./configure --prefix=${dirinst} \
+			--with-python-include=${python_inc_dir} \
+			--with-python-bin=${python_bin_dir} \
+			--with-hepmc2=${HEPMC2_DIR} \
+			--with-hepmc2-include=${HEPMC2_DIR}/include \
+			--with-hepmc2-lib=${HEPMC2_DIR}/lib
+	else
+		./configure --prefix=${dirinst} \
+			--with-python-include=${python_inc_dir} \
+			--with-python-bin=${python_bin_dir} \
+			--with-hepmc2=${HEPMC2_DIR} \
+			--with-hepmc2-include=${HEPMC2_DIR}/include \
+			--with-hepmc2-lib=${HEPMC2_DIR}/lib \
+			--with-lhapdf6=${LHAPDF_DIR} \
+			--with-lhapdf6-include=${LHAPDF_DIR}/include \
+			--with-lhapdf6-lib=${LHAPDF_DIR}/lib
+	fi
+}
+
 if [ ! -d ${dirinst} ] || [ ${reconfigure} ]; then
 	if [ -d ${dirsrc} ]; then
 		cd ${dirsrc}
@@ -81,12 +103,7 @@ if [ ! -d ${dirinst} ] || [ ${reconfigure} ]; then
 	    if [ -z ${reconfigure} ]; then
 	    	if [ ! -d ${dirinst} ]; then
 				# echo "-- NO RECONFIGURE -- ${reconfigure}"
-				./configure --prefix=${dirinst} \
-					--with-python-include=${python_inc_dir} \
-					--with-python-bin=${python_bin_dir} \
-					--with-hepmc2=${HEPMC2_DIR} \
-					--with-hepmc2-include=${HEPMC2_DIR}/include \
-					--with-hepmc2-lib=${HEPMC2_DIR}/lib
+				run_configure
 				make -j $(n_cores) && make install
 			fi
 		else
@@ -94,13 +111,7 @@ if [ ! -d ${dirinst} ] || [ ${reconfigure} ]; then
 			# echo "- do we already have hepmc2?"
 			# echo "$(pythia8-config --config | grep hepmc2)"
 			if [ -z "$(pythia8-config --config | grep hepmc2)" ]; then
-				# make clean
-				./configure --prefix=${dirinst} \
-					--with-python-include=${python_inc_dir} \
-					--with-python-bin=${python_bin_dir} \
-					--with-hepmc2=${HEPMC2_DIR} \
-					--with-hepmc2-include=${HEPMC2_DIR}/include \
-					--with-hepmc2-lib=${HEPMC2_DIR}/lib
+				run_configure
 				make -j $(n_cores) && make install
 			fi
 		fi

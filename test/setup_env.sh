@@ -19,6 +19,7 @@ unset PYTHONPATH
 # . ${SCRIPTPATH}/local_hepmc3_install.sh
 # . ${SCRIPTPATH}/local_hepmc2_install.sh
 . ${SCRIPTPATH}/local_hepmc2_install_cmake.sh
+. ${SCRIPTPATH}/local_lhapdf_install.sh
 . ${SCRIPTPATH}/local_pythia_install.sh
 # . ${SCRIPTPATH}/local_pythia_install.sh reconfigure
 . ${SCRIPTPATH}/local_fastjet_install.sh
