@@ -21,7 +21,7 @@
 
 ```bash
 git clone git@github.com:matplo/fjpydev.git
-cd fjcmake/test
+cd fjpydev/test
 ./local_pythia_install.sh
 ./local_fastjet_install.sh
 . ./setup_env.sh
