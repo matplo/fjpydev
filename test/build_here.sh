@@ -29,12 +29,41 @@ function n_cores()
 	echo ${_ncores}
 }
 
+function thisdir()
+{
+        SOURCE="${BASH_SOURCE[0]}"
+        while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+          DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+          SOURCE="$(readlink "$SOURCE")"
+          [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+        done
+        DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+        echo ${DIR}
+}
+SCRIPTPATH=$(thisdir)
+
+function abspath()
+{
+  case "${1}" in
+    [./]*)
+    echo "$(cd ${1%/*}; pwd)/${1##*/}"
+    ;;
+    *)
+    echo "${PWD}/${1}"
+    ;;
+  esac
+}
+export -f abspath
+
 echo "unsetting PYTHONPATH"
 unset PYTHONPATH
-cmake -S.. -Bbuild -DBUILD_PYTHON=ON -DCMAKE_INSTALL_PREFIX=$PWD/install -DCMAKE_BUILD_TYPE=Release \
+cmake -S.. -Bbuild -DBUILD_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${SCRIPTPATH}/install -DCMAKE_BUILD_TYPE=Release \
 && cmake --build build --target all -- -j $(n_cores) \
 && cmake --build build --target install
 
-./fix_hepmc_links.sh /Volumes/mp256s/devel/fjpydev/test/build/python/fjpy/pythiafjtools
-./fix_hepmc_links.sh /Volumes/mp256s/devel/fjpydev/test/build/python/fjpy/mptools
-./fix_hepmc_links.sh /Volumes/mp256s/devel/fjpydev/test/build/python/fjpy/.libs
+
+if [ $(os_darwin) ]; then
+	${SCRIPTPATH}/fix_hepmc_links.sh ${SCRIPTPATH}/build/python/fjpy/pythiafjtools
+	${SCRIPTPATH}/fix_hepmc_links.sh ${SCRIPTPATH}/build/python/fjpy/mptools
+	${SCRIPTPATH}/fix_hepmc_links.sh ${SCRIPTPATH}/build/python/fjpy/.libs
+fi
