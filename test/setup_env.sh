@@ -27,11 +27,10 @@ unset PYTHONPATH
 # pyfastjet="${SCRIPTPATH}/build/python/CMakeSwig/fastjet"
 # export PYTHONPATH=${PYTHONPATH}:${recursivetools}:${pyfastjet}
 
-unset PYTHONPATH
 python_version=$(python3 --version | cut -f 2 -d' ' | cut -f 1-2 -d.)
-export PYTHONPATH=${FASTJET_DIR}/lib/python${python_version}/site-packages
+export PYTHONPATH=${PYTHONPATH}:${FASTJET_DIR}/lib/python${python_version}/site-packages
 export PYTHONPATH=${PYTHONPATH}:${HEPMC2_DIR}/lib
-export PYTHONPATH=${PYTHONPATH}:${LHAPDF_DIR}
+export PYTHONPATH=${PYTHONPATH}:${LHAPDF_DIR}/lib/python${python_version}/site-packages
 export PYTHONPATH=${PYTHONPATH}:${PYTHIA_DIR}/lib
 export PYTHONPATH=${PYTHONPATH}:${SCRIPTPATH}/build/python/fjpy
 
