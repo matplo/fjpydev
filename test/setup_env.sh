@@ -29,11 +29,20 @@ unset PYTHONPATH
 
 unset PYTHONPATH
 python_version=$(python3 --version | cut -f 2 -d' ' | cut -f 1-2 -d.)
-export PYTHONPATH=${PYTHONPATH}:${FASTJET_DIR}/lib/python${python_version}/site-packages
+export PYTHONPATH=${FASTJET_DIR}/lib/python${python_version}/site-packages
 export PYTHONPATH=${PYTHONPATH}:${HEPMC2_DIR}/lib
-export PYTHONPATH=${PYTHONPATH}:${HEPMC2_DIR}
+export PYTHONPATH=${PYTHONPATH}:${LHAPDF_DIR}
 export PYTHONPATH=${PYTHONPATH}:${PYTHIA_DIR}/lib
 export PYTHONPATH=${PYTHONPATH}:${SCRIPTPATH}/build/python/fjpy
 
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${HEPMC_DIR}/lib:${HEPMC_DIR}/lib:${HEPMC_DIR}/lib
-export DYLD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${HEPMC_DIR}/lib:${HEPMC_DIR}/lib:${HEPMC_DIR}/lib
+export PATH=${PATH}:${HEPMC_DIR}/bin:${LHAPDF_DIR}/bin:${PYTHIA8_DIR}/bin:${FASTJET_DIR}/bin
+if [ -z ${LD_LIBRARY_PATH} ]; then
+	export LD_LIBRARY_PATH=${HEPMC_DIR}/lib:${LHAPDF_DIR}/lib:${PYTHIA_DIR}/lib:${FASTJET_DIR}/lib
+else
+	export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${HEPMC_DIR}/lib:${LHAPDF_DIR}/lib:${PYTHIA_DIR}/lib:${FASTJET_DIR}/lib
+fi
+if [ -z ${DYLD_LIBRARY_PATH} ]; then
+	export DYLD_LIBRARY_PATH=${HEPMC_DIR}/lib:${LHAPDF_DIR}/lib:${PYTHIA_DIR}/lib:${FASTJET_DIR}/lib
+else
+	export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${HEPMC_DIR}/lib:${LHAPDF_DIR}/lib:${PYTHIA_DIR}/lib:${FASTJET_DIR}/lib
+fi
