@@ -57,7 +57,7 @@ export -f abspath
 
 echo "unsetting PYTHONPATH"
 unset PYTHONPATH
-cmake -S.. -Bbuild -DBUILD_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${SCRIPTPATH}/install -DCMAKE_BUILD_TYPE=Release \
+cmake -Bbuild -DBUILD_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${SCRIPTPATH}/install -DCMAKE_BUILD_TYPE=Release $(abspath ${SCRIPTPATH}/..) \
 && cmake --build build --target all -- -j $(n_cores) \
 && cmake --build build --target install
 
