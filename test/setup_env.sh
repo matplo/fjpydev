@@ -14,7 +14,7 @@ function thisdir()
 
 SCRIPTPATH=$(thisdir)
 
-unset PYTHONPATH
+[ "x${1}" == "xunset" ] && unset PYTHONPATH	&& echo "unsetting PYTHONPATH"
 # . ${SCRIPTPATH}/local_pythia_install.sh
 # . ${SCRIPTPATH}/local_hepmc3_install.sh
 # . ${SCRIPTPATH}/local_hepmc2_install.sh

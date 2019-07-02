@@ -65,8 +65,7 @@ if [ ! -d ${fjdirinst} ]; then
 	if [ -d ${fjdirsrc} ]; then
 		cd ${fjdirsrc}
 		echo "current dir: $PWD"
-	    echo "unsetting PYTHONPATH"
-	    unset PYTHONPATH
+		[ "x${1}" == "xunset" ] && unset PYTHONPATH	&& echo "unsetting PYTHONPATH"
 	    python_includes=$(python3-config --includes)
 	    python_inc_dir=$(python3-config --includes | cut -d' ' -f 1 | cut -dI -f 2)
 	    python_exec=$(which python3)

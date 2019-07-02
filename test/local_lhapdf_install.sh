@@ -65,17 +65,6 @@ fi
 if [ ! -d ${dirinst} ]; then
 	if [ -d ${dirsrc} ]; then
 		cd ${dirsrc}
-	    # echo "unsetting PYTHONPATH"
-	    # unset PYTHONPATH
-	    # python_inc_dir=$(python3-config --includes | cut -d' ' -f 1 | cut -dI -f 2)
-	    # python_exec=$(which python3)
-	    # python_bin_dir=$(dirname ${python_exec})
-	    # # echo "python exec: ${python_exec}"
-	    # # echo "python include: ${python_inc_dir}"
-	    # # this is a nasty trick to force python3 bindings
-	    # python_bin_dir="$PWD/tmppy"
-	    # mkdir -p ${python_bin_dir}
-	    # ln -sf ${python_exec} ${python_bin_dir}/python
 		./configure --prefix=${dirinst}
 		make -j $(n_cores) && make install
 		cd - 2>&1 > /dev/null

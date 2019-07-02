@@ -64,8 +64,7 @@ fi
 if [ ! -d ${dirinst} ]; then
 	if [ -d ${dirsrc} ]; then
 		cd ${dirsrc}
-	    echo "unsetting PYTHONPATH"
-	    unset PYTHONPATH
+		[ "x${1}" == "xunset" ] && unset PYTHONPATH	&& echo "unsetting PYTHONPATH"
 	    python_inc_dir=$(python3-config --includes | cut -d' ' -f 1 | cut -dI -f 2)
 	    python_exec=$(which python3)
 	    python_bin_dir=$(dirname ${python_exec})
