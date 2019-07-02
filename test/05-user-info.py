@@ -19,14 +19,13 @@ included in your PYTHONPATH environment variable.
 """
 from __future__ import print_function
 
-import os
-spath = os.path.dirname(os.path.abspath(__file__))
-
-import sys
-sys.path.append(os.path.abspath("{0}/build/python/fjpy".format(spath)))
-sys.path.append(os.path.abspath("{0}/pythia8235inst/lib".format(spath)))
-python_version = '{0}.{1}'.format(sys.version_info[0], sys.version_info[1])
-sys.path.append(os.path.abspath("{0}/fastjet-3.3.2-inst/lib/python{1}/site-packages".format(spath, python_version)))
+# import os
+# spath = os.path.dirname(os.path.abspath(__file__))
+# import sys
+# sys.path.append(os.path.abspath("{0}/build/python/fjpy".format(spath)))
+# sys.path.append(os.path.abspath("{0}/pythia8235inst/lib".format(spath)))
+# python_version = '{0}.{1}'.format(sys.version_info[0], sys.version_info[1])
+# sys.path.append(os.path.abspath("{0}/fastjet-3.3.2-inst/lib/python{1}/site-packages".format(spath, python_version)))
 
 import fastjet as fj
 import pythia8
