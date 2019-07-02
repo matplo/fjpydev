@@ -3,7 +3,7 @@ set_property(SOURCE pythiafjtools.i PROPERTY SWIG_MODULE_NAME pypythiafjtools)
 swig_add_library(pypythiafjtools
 	TYPE SHARED
 	LANGUAGE python
-	OUTPUT_DIR ${CMAKE_BINARY_DIR}/python/${PROJECT_NAME}/PythiaFJTools
+	OUTPUT_DIR ${CMAKE_BINARY_DIR}/python/${PROJECT_NAME}/pythiafjtools
 	SOURCES	pythiafjtools.i)
 
 add_compile_definitions(SWIG)

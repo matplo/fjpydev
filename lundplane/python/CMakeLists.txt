@@ -3,7 +3,7 @@ set_property(SOURCE lundplane.i PROPERTY SWIG_MODULE_NAME pylundplane)
 swig_add_library(pylundplane
 	TYPE SHARED
 	LANGUAGE python
-	OUTPUT_DIR ${CMAKE_BINARY_DIR}/python/${PROJECT_NAME}/LundPlane
+	OUTPUT_DIR ${CMAKE_BINARY_DIR}/python/${PROJECT_NAME}/lundplane
 	SOURCES	lundplane.i)
 
 add_compile_definitions(SWIG)
