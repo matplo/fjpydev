@@ -3,7 +3,7 @@ set_property(SOURCE recursivetools.i PROPERTY SWIG_MODULE_NAME pyrecursivetools)
 swig_add_library(pyrecursivetools
 	TYPE SHARED
 	LANGUAGE python
-	OUTPUT_DIR ${CMAKE_BINARY_DIR}/python/${PROJECT_NAME}/RecursiveTools
+	OUTPUT_DIR ${CMAKE_BINARY_DIR}/python/${PROJECT_NAME}/recursivetools
 	SOURCES	recursivetools.i)
 
 add_compile_definitions(SWIG)
