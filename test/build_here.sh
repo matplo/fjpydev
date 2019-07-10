@@ -55,8 +55,8 @@ function abspath()
 }
 export -f abspath
 
-echo "unsetting PYTHONPATH"
-unset PYTHONPATH
+[ "x${1}" == "xunset" ] && unset PYTHONPATH	&& echo "unsetting PYTHONPATH"
+
 cmake -Bbuild -DBUILD_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${SCRIPTPATH}/install -DCMAKE_BUILD_TYPE=Release $(abspath ${SCRIPTPATH}/..) \
 && cmake --build build --target all -- -j $(n_cores) \
 && cmake --build build --target install
