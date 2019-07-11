@@ -3,11 +3,16 @@ add_library(pythiafjtools "")
 target_sources(pythiafjtools
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/PythiaFJTools/pyfjtools.hh>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/PythiaFJTools/hepmctools.hh>
 
     $<INSTALL_INTERFACE:include/PythiaFJTools/pyfjtools.hh>
+    $<INSTALL_INTERFACE:include/PythiaFJTools/hepmctools.hh>
+
   PRIVATE
     src/pyfjtools.cc
+    src/hepmctools.cc
 )
+
 target_include_directories(pythiafjtools
   PUBLIC
     $<BUILD_INTERFACE:${PYTHIA8_DIR}/include>
@@ -35,6 +40,8 @@ target_link_libraries(pythiafjtools
     # CMakeSwig::fastjet
     ${FASTJET_LIBS}
     ${PYTHIA8_LDFLAGS}
+    # ${HEPMC_LINK_LIBRARIES}
+    ${HEPMC_LIBRARIES}
 )
 
 #target_link_libraries(pythiafjtools PUBLIC...)

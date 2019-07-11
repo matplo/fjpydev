@@ -18,12 +18,12 @@ if [ -d ${srcdir} ]; then
 		[ ! -e fjcontrib-1.041.tar.gz ] && wget http://fastjet.hepforge.org/contrib/downloads/fjcontrib-1.041.tar.gz
 		if [ -e fjcontrib-1.041.tar.gz ]; then
 			[ ! -d fjcontrib-1.041 ] && tar zxvf fjcontrib-1.041.tar.gz
-			cp -rv ${wdir}/fjcontrib-1.041/RecursiveTools/*.hh ${srcdir}/recursivetools/include/RecursiveTools
-			cp -rv ${wdir}/fjcontrib-1.041/RecursiveTools/*.cc ${srcdir}/recursivetools/src
+			rsync ${wdir}/fjcontrib-1.041/RecursiveTools/*.hh ${srcdir}/recursivetools/include/RecursiveTools
+			rsync ${wdir}/fjcontrib-1.041/RecursiveTools/*.cc ${srcdir}/recursivetools/src
 			patch ${srcdir}/recursivetools/include/RecursiveTools/RecursiveSymmetryCutBase.hh -i ${srcdir}/recursivetools/RecursiveSymmetryCutBase.patch
 
-			cp -rv ${wdir}/fjcontrib-1.041/LundPlane/*.hh ${srcdir}/lundplane/include/LundPlane
-			cp -rv ${wdir}/fjcontrib-1.041/LundPlane/*.cc ${srcdir}/lundplane/src
+			rsync ${wdir}/fjcontrib-1.041/LundPlane/*.hh ${srcdir}/lundplane/include/LundPlane
+			rsync ${wdir}/fjcontrib-1.041/LundPlane/*.cc ${srcdir}/lundplane/src
 			rm ${srcdir}/lundplane/src/example_*.cc
 
 			patch ${srcdir}/lundplane/include/LundPlane/SecondaryLund.hh -i ${srcdir}/lundplane/SecondaryLund.patch

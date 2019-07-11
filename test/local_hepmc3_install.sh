@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function os_linux()
 {
 	_system=$(uname -a | cut -f 1 -d " ")
@@ -42,59 +41,55 @@ function thisdir()
 	echo ${DIR}
 }
 SCRIPTPATH=$(thisdir)
+savepwd=${PWD}
 
-version=3.3.2
-fjfname=fastjet-${version}
-fjdirsrc=${SCRIPTPATH}/fastjet-${version}
-fjdirinst=${SCRIPTPATH}/fjpydev/fastjet-${version}
+version=3.1.0
+fname=HepMC3-${version}
+dirsrc=${SCRIPTPATH}/HepMC3-${version}
+dirinst=${SCRIPTPATH}/fjpydev/hepmc-${version}
 
 if [ ! -z ${1} ]; then
-	fjdirinst=${1}
+	dirinst=${1}
 fi
 
-if [ ! -e ${SCRIPTPATH}/${fjfname}.tar.gz ]; then
+if [ ! -e ${SCRIPTPATH}/${fname}.tar.gz ]; then
 	cd ${SCRIPTPATH}
-	wget http://fastjet.fr/repo/${fjfname}.tar.gz
+	wget http://hepmc.web.cern.ch/hepmc/releases/${fname}.tar.gz
 fi
 
-if [ ! -d ${fjdirsrc} ]; then
-	tar zxvf ${fjdirsrc}.tar.gz
+if [ ! -d ${dirsrc} ]; then
+	tar zxvf ${fname}.tar.gz
 fi
 
-if [ ! -d ${fjdirinst} ]; then
-	if [ -d ${fjdirsrc} ]; then
-		cd ${fjdirsrc}
-		echo "current dir: $PWD"
+if [ ! -d ${dirinst} ]; then
+	if [ -d ${dirsrc} ]; then
+		cd ${dirsrc}
 		[ "x${1}" == "xunset" ] && unset PYTHONPATH	&& echo "unsetting PYTHONPATH"
-	    python_includes=$(python3-config --includes)
 	    python_inc_dir=$(python3-config --includes | cut -d' ' -f 1 | cut -dI -f 2)
 	    python_exec=$(which python3)
 	    python_bin_dir=$(dirname ${python_exec})
 	    echo "python exec: ${python_exec}"
-	    echo "python includes: ${python_includes}"
 	    echo "python include: ${python_inc_dir}"
-		if [ "x${CGAL_DIR}" == "x" ]; then
-		    ./configure --prefix=${fjdirinst} --enable-allcxxplugins \
-		    PYTHON=${python_exec} \
-		    PYTHON_INCLUDE="${python_includes}" \
-		else
-			echo "[i] building using cgal at ${CGAL_DIR}"
-		    ./configure --prefix=${fjdirinst} --enable-allcxxplugins \
-		    PYTHON=${python_exec} \
-		    PYTHON_INCLUDE="${python_includes}" \
-		    --enable-cgal --with-cgaldir=${CGAL_DIR} \
-		    --enable-pyext
-		    # \ LDFLAGS=-Wl,-rpath,${BOOST_DIR}/lib CXXFLAGS=-I${BOOST_DIR}/include CPPFLAGS=-I${BOOST_DIR}/include
-		fi
-		make -j $(n_cores) && make install
-		cd -
+	    # this is a nasty trick to force python3 bindings
+	    python_bin_dir="$PWD/tmppy"
+	    mkdir -p ${python_bin_dir}
+	    ln -s ${python_exec} ${python_bin_dir}/python
+	    echo "python bin dir: ${python_bin_dir}"
+		mkdir hepmc3-build
+		cd hepmc3-build
+		cmake -S${dirsrc} -DHEPMC3_ENABLE_ROOTIO=OFF -DCMAKE_INSTALL_PREFIX=${dirinst} \
+			-DHEPMC3_BUILD_EXAMPLES=ON -DHEPMC3_ENABLE_TEST=ON \
+			-DHEPMC3_INSTALL_INTERFACES=ON
+		make -j $(n_cores) && make install && make test
+		ln -s ${dirinst}/include/HepMC3 ${dirinst}/include/HepMC
+		[ -e ${dirinst}/lib/libHepMC3.dylib ] && ln -s ${dirinst}/lib/libHepMC3.dylib ${dirinst}/lib/libHepMC.dylib
+		[ -e ${dirinst}/lib/libHepMC3.so ] && ln -s ${dirinst}/lib/libHepMC3.so ${dirinst}/lib/libHepMC.so
+		cd ${savepwd}
 	fi
 fi
 
-if [ -d ${fjdirinst} ]; then
-	export FASTJET_DIR=${fjdirinst}
-	export PATH=$PATH:${fjdirinst}/bin
-	python_version=$(python3 --version | cut -f 2 -d' ' | cut -f 1-2 -d.)
-	export PYTHONPATH=${PYTHONPATH}:${fjdirinst}/lib/python${python_version}/site-packages
+if [ -d ${dirinst} ]; then
+	export HEPMC3_DIR=${dirinst}
+	export PATH=$PATH:${dirinst}/bin
+	export PYTHONPATH=${PYTHONPATH}:${dirinst}/lib
 fi
-
