@@ -62,8 +62,8 @@ cmake -Bbuild -DBUILD_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${SCRIPTPATH}/install -DC
 && cmake --build build --target install
 
 
-if [ $(os_darwin) ]; then
-	${SCRIPTPATH}/fix_hepmc_links.sh ${SCRIPTPATH}/build/python/fjpy/pythiafjtools
-	${SCRIPTPATH}/fix_hepmc_links.sh ${SCRIPTPATH}/build/python/fjpy/mptools
-	${SCRIPTPATH}/fix_hepmc_links.sh ${SCRIPTPATH}/build/python/fjpy/.libs
-fi
+# if [ $(os_darwin) ]; then
+# 	${SCRIPTPATH}/fix_hepmc_links.sh ${SCRIPTPATH}/build/python/fjpy/pythiafjtools
+# 	${SCRIPTPATH}/fix_hepmc_links.sh ${SCRIPTPATH}/build/python/fjpy/mptools
+# 	${SCRIPTPATH}/fix_hepmc_links.sh ${SCRIPTPATH}/build/python/fjpy/.libs
+# fi

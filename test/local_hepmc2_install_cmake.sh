@@ -81,6 +81,10 @@ if [ ! -d ${dirinst} ]; then
 	fi
 fi
 
+#		      	-DCMAKE_MACOSX_RPATH=ON \
+#		      	-DCMAKE_INSTALL_RPATH=${dirinst}/lib \
+#		      	-DCMAKE_BUILD_WITH_INSTALL_NAME_DIR=ON \
+
 if [ -d ${dirinst} ]; then
 	export HEPMC2_DIR=${dirinst}
 	export HEPMC_DIR=${dirinst}
